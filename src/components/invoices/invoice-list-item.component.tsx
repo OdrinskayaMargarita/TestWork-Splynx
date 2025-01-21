@@ -1,43 +1,21 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 
 import { TypeNavigation } from "@ali/types";
+import { InvoiceItemType, InvoiceStatus } from "@ali/types/types";
 import { Link } from "expo-router";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 import { tw } from "../../lib/tailwind";
-import { InvoiceItemType } from "@ali/types/types";
 
 export const InvoiceListItemComponent: FC<IProps> = ({ item }) => {
-  const [invoiceID, setInvoiceID] = useState(0);
-  const badge = item.status.badges.find((item) => item.title);
-
-  const getInvoiceID = () => {
-    const actionWithInvoiceId = item.actions.find(
-      (action) => action.action && action.action.includes("invoice_id")
-    );
-
-    if (actionWithInvoiceId) {
-      const match = actionWithInvoiceId.action.match(/invoice_id:\s*(\d+)/);
-      if (match) {
-        const id = parseInt(match[1], 10);
-        setInvoiceID(id);
-      }
-    }
-
-    return null;
-  };
-
-  useEffect(() => {
-    getInvoiceID();
-  }, []);
-
+  const isPaid = item.status === InvoiceStatus.PAID;
   return (
     <Link
       href={{
-        params: { id: invoiceID },
+        params: { id: item.id },
         pathname: `/${TypeNavigation.INVOICE_MODAL}`,
       }}
-      style={tw`border-t border-b border-neutral-800 py-3`}
+      style={tw`border-b border-neutral-800 py-3`}
     >
       <View style={tw`flex flex-row flex-wrap justify-between `}>
         <Text style={tw` w-1/3 text-wrap`}>#{item.number}</Text>
@@ -53,11 +31,11 @@ export const InvoiceListItemComponent: FC<IProps> = ({ item }) => {
         </Text>
         <View style={tw`w-1/2 flex-row justify-end`}>
           <Text
-            style={tw`text-wrap px-2 py-0.5 text-white rounded-sm bg-${
-              badge ? badge.badge : "white"
-            }  `}
+            style={tw`text-wrap px-2 py-0.5 text-white rounded-sm bg-indigo-600 ${
+              isPaid ? "bg-green-500" : "bg-red-500"
+            }`}
           >
-            {badge ? badge.title : "-"}
+            {isPaid ? "Paid" : "Not Paid"}
           </Text>
         </View>
       </View>

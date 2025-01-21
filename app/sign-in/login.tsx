@@ -1,32 +1,31 @@
 import { LoginInputComponent } from "@ali/components/inputs/login-input.component";
 import { PasswordInputComponent } from "@ali/components/inputs/password-input.component";
 import { ContainerComponent } from "@ali/components/templates/container.component";
-import { useFormLogin } from "@ali/hooks/forms/use-form-email.hook";
-import { useAppRouter } from "@ali/hooks/router/use-app-router";
+import { useFormLogin } from "@ali/hooks/forms/use-form-login.hook";
 import { useButtonWithGeneratedId } from "@ali/hooks/use-button-with-id.hook";
-import { TypeNavigation } from "@ali/types";
 import { Text, View } from "react-native";
 
-import { loginAction } from "../../src/actions/login.action";
 import { tw } from "../../src/lib/tailwind";
-import { useAppDispatch } from "../../src/store/store";
+import { useLoginMutation } from "../../src/queries/useLoginMutation.query";
 
 const Login = () => {
-  const { replaceTo } = useAppRouter();
-
-  const dispatch = useAppDispatch();
-
   const { control, errors, handleSubmit, getValues } = useFormLogin();
 
   const loginError = errors?.login;
   const loginPassword = errors?.password;
 
-  const { password, login } = getValues();
+  const { mutate } = useLoginMutation();
 
-  const onSubmit = async () => {
-    await dispatch(loginAction({ login, password }));
+  const onSubmit = () => {
+    const { password, login } = getValues();
 
-    replaceTo(TypeNavigation.INVOICE_LIST);
+    const data = {
+      auth_type: "customer",
+      login: login,
+      password: password,
+    };
+
+    mutate(data);
   };
 
   const [LoginButton] = useButtonWithGeneratedId({

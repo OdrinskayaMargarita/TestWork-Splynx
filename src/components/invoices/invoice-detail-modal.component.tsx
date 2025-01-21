@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { InvoiceDetailDocumentsItemType } from "@ali/types/types";
+import { InvoiceDetailInnerItemType } from "@ali/types/types";
 import { Text, View } from "react-native";
 
 import { tw } from "../../lib/tailwind";
@@ -24,18 +24,10 @@ export const InvoiceDetailModalComponent: FC<IProps> = ({ item }) => {
         <Text style={tw`w-1/2`}>TAX %:</Text>
         <Text style={tw`w-1/2 text-right`}>{item.tax}</Text>
       </View>
-      <View style={tw`flex flex-row items-center justify-between  mb-1.5`}>
-        <Text style={tw`w-1/2`}>With TAX:</Text>
-        <Text style={tw`w-1/2 text-right`}>{item.with_tax}</Text>
-      </View>
-      <View style={tw`flex flex-row items-center justify-between`}>
-        <Text style={tw`w-1/2`}>Total:</Text>
-        <Text style={tw`w-1/2 text-right`}>{item.total}</Text>
-      </View>
     </View>
   );
 };
 
 interface IProps {
-  item: InvoiceDetailDocumentsItemType;
+  item: InvoiceDetailInnerItemType;
 }
